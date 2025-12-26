@@ -141,12 +141,6 @@ func StartServer(me string) *ViewServer {
 	vs := new(ViewServer)
 	vs.me = me
 
-
-	if runtime.GOOS == "windows" {
-		vs.me = strings.Replace(vs.me, "/var/tmp", ".", 1)
-		vs.me = strings.Replace(vs.me, "/", "_", -1) 
-		// 예: /var/tmp/824-1/viewserver-x -> ._var_tmp_824-1_viewserver-x
-    }
 	// Your vs.* initializations here.
 	vs.currView = View{Viewnum: 0, Primary: "", Backup: ""}
 	vs.pingTimeMap = make(map[string]time.Time)
