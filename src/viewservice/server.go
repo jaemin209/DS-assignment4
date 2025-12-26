@@ -43,6 +43,10 @@ func (vs *ViewServer) Ping(args *PingArgs, reply *PingReply) error {
 		vs.currView.Viewnum = 1
 		vs.primaryAckedCurrView = false
 	} else if args.Me == vs.currView.Primary && args.Viewnum == 0 {
+	} else if args.Me != vs.currView.Primary && args.Me != vs.currView.Backup == "" && vs.primaryAckedCurrView {
+		vs.idleServer = args.Me
+		vsx. currView.Viewnum++
+		vs.primaryAckedCurrView = fals
 	} else if args.Me != vs.currView.Primary && args.Me != vs.currView.Backup {
 		vs.idleServer = args.Me
 	}
