@@ -8,8 +8,6 @@ import "sync"
 import "fmt"
 import "os"
 import "sync/atomic"
-import "runtime"
-import "strings"
 
 
 type ViewServer struct {
