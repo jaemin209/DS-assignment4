@@ -33,14 +33,14 @@ func (vs *ViewServer) Ping(args *PingArgs, reply *PingReply) error {
 	defer vs.mu.Unlock()
 
 	vs.pingTimeMap[args.Me] = time.Now()
-	if args.Me == vs.currView.Primary && args.ViewNum == vs.currView.Viewnum {
+	if args.Me == vs.currView.Primary && args.Viewnum == vs.currView.Viewnum {
 		vs.primaryAckedCurrView = true
 	}
 	if vs.currView.Viewnum == 0 {
 		vs.currView.Primary = args.Me
 		vs.currView.Viewnum = 1
 		vs.primaryAckedCurrView = false
-	} else if args.Me == vs.currView.Primary && args.ViewNum == 0 {
+	} else if args.Me == vs.currView.Primary && args.Viewnum == 0 {
 	} else if args.Me != vs.currView.Primary && args.Me != vs.currView.Backup {
 		vs.idleServer = args.Me
 	}
@@ -112,12 +112,6 @@ func (vs *ViewServer) tick() {
 
 }
 
-
-//
-// tell the server to shut itself down.
-// for testing.
-// please don't change these two functions.
-//
 func (vs *ViewServer) Kill() {
 	atomic.StoreInt32(&vs.dead, 1)
 	vs.l.Close()
