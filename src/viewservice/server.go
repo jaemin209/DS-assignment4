@@ -90,12 +90,10 @@ func (vs *ViewServer) tick() {
 	// 2. No recent pings from the backup
 	if vs.primaryAckedCurrView {
 		
-		// 시나리오 A: Primary가 죽은 경우
 		if isDead(vs.currView.Primary) {
 			vs.currView.Primary = vs.currView.Backup
 			vs.currView.Backup = ""
 			
-			// Backup을 Primary로 올렸으니, 새로운 Backup 후보(Idle)가 있다면 등록
 			if !isDead(vs.idleServer) {
 				vs.currView.Backup = vs.idleServer
 				vs.idleServer = ""
@@ -103,7 +101,6 @@ func (vs *ViewServer) tick() {
 			vs.currView.Viewnum++
 			vs.primaryAckedCurrView = false
 		} else if isDead(vs.currView.Backup) || vs.currView.Backup == "" {
-			// 시나리오 B: Backup이 죽었거나 없는데, 유휴 서버가 있는 경우
 			if vs.idleServer != "" && !isDead(vs.idleServer) {
 				vs.currView.Backup = vs.idleServer
 				vs.idleServer = ""
