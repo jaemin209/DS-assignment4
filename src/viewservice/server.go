@@ -32,12 +32,20 @@ func (vs *ViewServer) Ping(args *PingArgs, reply *PingReply) error {
 	vs.mu.Lock()
 	defer vs.mu.Unlock()
 
-	// Your code here.	
+	vs.pingTimeMap[args.Me] = time.Now()
+	if args.Me == vs.currView.Primary && args.ViewNum == vs.currView.Viewnum {
+		vs.primaryAckedCurrView = true
+	}
+	if vs.currView.Viewnum == 0 {
+		vs.currView.Primary = args.Me
+		vs.currView.Viewnum = 1
+		vs.primaryAckedCurrView = false
+	} else if args.Me == vs.currView.Primary && args.ViewNum == 0 {
+	} else if args.Me != vs.currView.Primary && args.Me != vs.currView.Backup {
+		vs.idleServer = args.Me
+	}
 
-	// 1. Update ping times for current server
-	
-	// 2. Update view and/or idle server if reboot or new server, or ACK the current view
-
+	reply.View = vs.currView
 	return nil
 }
 
